@@ -7,6 +7,7 @@ This directory /wsu/home/groups/piquelab/SCAIP/SCAIP1-6_protein-coding contains 
 strategy: FastQTL on pseudo-bulk residuals <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData <br/>
 OUTPUT:  <br/>
+###
 Filters:<br/>
 - inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/6_DEG.CelltypeNew.R<br/>
 - eQTL mapping window: +/-50kb<br/>
@@ -19,6 +20,7 @@ Steps:<br/>
 strategy: mashr on eQTL results from all treatments and conditions at once <br/>
 INPUT:  <br/>
 OUTPUT:  <br/>
+###
 Filters:<br/>
 - gene-variant pairs with estimates across all cell types and conditions
 Steps:<br/>
@@ -28,14 +30,16 @@ Steps:<br/>
 strategy: lm testing dosage*treatment interaction using pair-wise trt-control models on union of significant eQTLs <br/>
 INPUT:  <br/>
 OUTPUT:  <br/>
+###
 Filters:<br/>
 - tested only significant (10%FDR) eQTLs
 Steps:<br/>
 
-### dipsersion eQTL mapping
+### dispersion eQTL mapping
 strategy: FastQTL on dispersion residuals <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.PhxNew.RData <br/>
 OUTPUT:  <br/>
+###
 Filters:<br/>
 - inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/10_RNA.variance.R<br/>
 - min. 3 individuals per batch-condition<br/>
@@ -48,6 +52,7 @@ Steps:<br/>
 strategy: lm testing dosage*treatment interaction using GE bulked along 3 bins <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/9_RNA.dynamic2_output/Filter2_DEG6571/Old/LDA{1,2}Bin/YtX.*.ave.RData <br/>
 OUTPUT:  <br/>
+###
 Filters:<br/>
 - inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/9_RNA.dynamic2.R
 - eQTL mapping window: +/-50kb<br/>
