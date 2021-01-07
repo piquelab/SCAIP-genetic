@@ -13,10 +13,11 @@ Filters:<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>
+###
 Steps:<br/>
 1. Normalize GE data and extract residuals: ./eQTL/normalize-all.R
 2. Calculate GE PCs (to correct for in eQTL mapping): ./eQTL/GE_PCA.sh
-3. Run eQTL mapping: run.FastQTL.nominals-all-covs.sh -> concatenate.chunks.sh
+3. Run eQTL mapping: ./eQTL/run.FastQTL.nominals-all-covs.sh -> ./eQTL/concatenate.chunks.sh
 4. 
 ### mashr_eQTL
 ./mashr_eQTL - all the scripts and results of running mashr (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL_mapping <br/>
@@ -26,6 +27,7 @@ OUTPUT:  <br/>
 ###
 Filters:<br/>
 - gene-variant pairs with estimates across all cell types and conditions
+###
 Steps:<br/>
 
 ### reQTL mapping
@@ -36,6 +38,7 @@ OUTPUT:  <br/>
 ###
 Filters:<br/>
 - tested only significant (10%FDR) eQTLs
+###
 Steps:<br/>
 
 ### dispersion eQTL mapping
@@ -49,6 +52,7 @@ Filters:<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>
+###
 Steps:<br/>
 
 ### LDA eQTL mapping
@@ -61,4 +65,5 @@ Filters:<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>
+###
 Steps:<br/>
