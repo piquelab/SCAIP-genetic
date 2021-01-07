@@ -5,11 +5,11 @@ This directory /wsu/home/groups/piquelab/SCAIP/SCAIP1-6_protein-coding contains 
 ### eQTL mapping
 ./eQTL_mapping - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 <br/>
 strategy: FastQTL on pseudo-bulk residuals <br/>
-INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData <br/>
+INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData <br/>
 OUTPUT:  <br/>
 ###
 Filters:<br/>
-- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/6_DEG.CelltypeNew.R<br/>
+- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew.R<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>
@@ -43,11 +43,11 @@ Steps:<br/>
 
 ### dispersion eQTL mapping
 strategy: FastQTL on dispersion residuals <br/>
-INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.PhxNew.RData <br/>
+INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.PhxNew.RData <br/>
 OUTPUT:  <br/>
 ###
 Filters:<br/>
-- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/10_RNA.variance.R<br/>
+- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.variance.R<br/>
 - min. 3 individuals per batch-condition<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
@@ -57,11 +57,11 @@ Steps:<br/>
 
 ### LDA eQTL mapping
 strategy: lm testing dosage*treatment interaction using GE bulked along 3 bins <br/>
-INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/9_RNA.dynamic2_output/Filter2_DEG6571/Old/LDA{1,2}Bin/YtX.*.ave.RData <br/>
+INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/9_RNA.dynamic2_output/Filter2_DEG6571/Old/LDA{1,2}Bin/YtX.*.ave.RData <br/>
 OUTPUT:  <br/>
 ###
 Filters:<br/>
-- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/9_RNA.dynamic2.R
+- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/9_RNA.dynamic2.R
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>

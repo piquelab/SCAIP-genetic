@@ -8,7 +8,7 @@ library(dplyr)
 treats <- c("_CTRL","_LPS-DEX","_LPS-EtOH","_PHA-DEX","_PHA-EtOH")
 
 # load GE data:
-load("/nfs/rprdata/julong/SCAIP/analyses/SCAIP-ALL-2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData")
+load("/nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData")
 YtX <- YtX_sel
 
 # remove the batch from colnames:
