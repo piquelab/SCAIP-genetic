@@ -14,7 +14,10 @@ Filters:<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>
 Steps:<br/>
-
+1. Normalize GE data and extract residuals: ./eQTL/normalize-all.R
+2. Calculate GE PCs (to correct for in eQTL mapping): ./eQTL/GE_PCA.sh
+3. Run eQTL mapping: run.FastQTL.nominals-all-covs.sh -> concatenate.chunks.sh
+4. 
 ### mashr_eQTL
 ./mashr_eQTL - all the scripts and results of running mashr (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL_mapping <br/>
 strategy: mashr on eQTL results from all treatments and conditions at once <br/>
