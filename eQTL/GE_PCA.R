@@ -1,7 +1,7 @@
 # this script takes in a normalized expression bed file, runs PCA on it and saves the PCs
 # based on /wsu/home/groups/piquelab/SCAIP/eQTL/FastQTL/GE_PCA/GE_PCA.R
 # 1/7/2021 JR
-
+# last edited and ran 1/11/2021 JR: fixed wrong formatting when saving GE_PCs
 library(dplyr)
 library(data.table)
 
@@ -42,4 +42,4 @@ for(i in 1:20){
 write.table(mypcs[1:i,], file=paste0("./GE_PCs/", dataset, "_",i,"GEPCs.txt"), col.names=TRUE, row.names=FALSE, quote=FALSE, sep="\t")
 }
 
-### END 1/7/2021
+### END 1/11/2021

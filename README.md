@@ -3,7 +3,7 @@
 This directory /wsu/home/groups/piquelab/SCAIP/SCAIP1-6_protein-coding contains all the scripts and results of SCAIP1-6 genetic analyses on protein-coding genes only <br/>
 
 ### eQTL mapping
-./eQTL_mapping - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 <br/>
+./eQTL_mapping - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 pseudo-bulk GE data<br/>
 strategy: FastQTL on pseudo-bulk residuals <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData <br/>
 OUTPUT:  <br/>
@@ -39,6 +39,17 @@ Filters:<br/>
 - tested only significant (10%FDR) eQTLs
 ###
 Steps:<br/>
+### eQTL mapinng on mean GE
+./eQTL_mapinng-on-mean - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 mean values from NB model
+strategy: FastQTL on residuals extracted from mean values from NB model <br/>
+INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.Bx.RData <br/>
+OUTPUT:  <br/>
+###
+Filters:<br/>
+- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.variance.R<br/>
+- min. 3 individuals per batch-condition<br/>
+- eQTL mapping window: +/-50kb<br/>
+- MAF: >=10% in cohort
 ### dispersion eQTL mapping
 ./dispersionQTL - all the scripts and results of running FastQTL (and follow-up analyses) on SCAIP1-6 dispersion data <br/>
 strategy: FastQTL on dispersion residuals <br/>
