@@ -32,10 +32,10 @@ mypcs <- as.data.frame(t(PCs$x))
 colnames(mypcs) <- colnames(data)
 
 #save the residuals:
-mypcs <- rbind(as.character(colnames(mypcs)), mypcs)
-rownames(mypcs)[1] <- "id"
 mypcs <- cbind(as.character(rownames(mypcs)), mypcs)
-write.table(mypcs, paste0("GE_PCs/",dataset,"_20GE_PCs.txt"), sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
+colnames(mypcs)[1] <- "id"
+
+write.table(mypcs, paste0("GE_PCs/",dataset,"_20GE_PCs.txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
 
 # save the covariate files subsetted to 1-20 GEPCs to use as covariate by FastQTL:
 for(i in 1:20){
