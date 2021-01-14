@@ -71,11 +71,13 @@ batches <- unique(gsub(".*_","",colnames(cellorig)))
 for (b in batches){
 # take out the columns for that batch:
 current <- cellorig[,grep(b,colnames(cellorig))]
-# set to NA if fewer than 3 non-NAs:
-current[rowSums(!is.na(current))<3,] <- NA
+# set to NA if fewer than indivBatchFilter non-NAs:
+current[rowSums(!is.na(current))<indivBatchFilter,] <- NA
 #merge back:
 cellsub <- cbind(cellsub,current)
 }
+# order columns alphabetically as they are in vcf file:
+                   cellsub <- cellsub[,order(colnames(cellsub))]
 # drop batch info from colnames:
 colnames(cellsub) <- gsub("_SCAIP.*","",colnames(cellsub))
                    cell <- cellsub
