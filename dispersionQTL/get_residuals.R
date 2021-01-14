@@ -77,10 +77,11 @@ current[rowSums(!is.na(current))<indivBatchFilter,] <- NA
 cellsub <- cbind(cellsub,current)
 }
 # order columns alphabetically as they are in vcf file:
-                   cellsub <- cellsub[,order(colnames(cellsub))]
+                   cellsub <- cellsub[,sort(colnames(cellsub))]
 # drop batch info from colnames:
 colnames(cellsub) <- gsub("_SCAIP.*","",colnames(cellsub))
-                   cell <- cellsub
+                   # drop the genes with >80% missing data:
+                   cell <- cellsub[rowSums(is.na(cellsub))<0.8*ncol(cellsub),]                   
                    # save qqnormed data:
                    qnorm <- normalize.quantiles(cell)
                    colnames(qnorm) <- colnames(cell)
@@ -105,9 +106,9 @@ colnames(cellsub) <- gsub("_SCAIP.*","",colnames(cellsub))
                    ## qnormbed[,1] <- as.numeric(qnormbed[,1])
                    ## qnormbed[,2] <- as.numeric(qnormbed[,2])
                    ## qnormbed <-qnormbed[order(qnormbed[,1],qnormbed[,2]),]
-                   write.table(qnormbed,paste0("./normalized_dispersion_residuals/",cn, t,"_unsorted-dispersion.bed"), sep="\t", col.names=T, quote=F,row.names=F)
+                   write.table(qnormbed,paste0("./normalized_dispersion_residuals/",cn, t,"_dispersion.bed"), sep="\t", col.names=T, quote=F,row.names=F)
                    # sort the bed file:
-                   system(paste0("(head -n 1 ./normalized_dispersion_residuals/",cn, t,"_unsorted-dispersion.bed && tail -n +2 ./normalized_dispersion_residuals/",cn, t,"_unsorted-dispersion.bed | sort -k 1,1 -k2,2n)> ./normalized_dispersion_residuals/",cn, t,"_dispersion.bed"))
+                   system(paste0("(head -n 1 ./normalized_dispersion_residuals/",cn, t,"_dispersion.bed && tail -n +2 ./normalized_dispersion_residuals/",cn, t,"_dispersion.bed | sort -k 1,1 -k2,2n)> ./normalized_dispersion_residuals/",cn, t,"_dispersion.bed"))
                    system(paste0("bgzip -f normalized_dispersion_residuals/",cn, t,"_dispersion.bed"))
                    system(paste0("tabix -p bed normalized_dispersion_residuals/",cn, t,"_dispersion.bed.gz"))
                         }
