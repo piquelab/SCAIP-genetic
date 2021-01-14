@@ -76,6 +76,10 @@ cellsub <- cbind(cellsub,current)
 # drop batch info from colnames:
 colnames(cellsub) <- gsub("_SCAIP.*","",colnames(cellsub))
                    cell <- cellsub
+# order columns alphabetically as they are in vcf file:
+                   cellsub <- cellsub[,sort(colnames(cellsub))]
+                   # drop the genes with >80% missing data:
+                   cell <- cellsub[rowSums(is.na(cellsub))<0.8*ncol(cellsub),]                   
                    # save qqnormed data:
                    qnorm <- normalize.quantiles(cell)
                    colnames(qnorm) <- colnames(cell)
