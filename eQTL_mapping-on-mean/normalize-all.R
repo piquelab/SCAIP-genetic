@@ -1,9 +1,10 @@
 # this script transforms mean GE data from the NB model and extracts residuals for eQTL mapping
-# based on ../dispersionQTL/get_residuals.R but with different input and filters
+# based on ../dispersionQTL/get_residuals.R but with different input
 # 1/13/2021 JR
 
 library(preprocessCore)
 library(dplyr)
+library(irlba)
 
 # set min number of individuals per batch:
 indivBatchFilter <- 3
@@ -75,15 +76,16 @@ cellsub <- cbind(cellsub,current)
 }
 # drop batch info from colnames:
 colnames(cellsub) <- gsub("_SCAIP.*","",colnames(cellsub))
-                   cell <- cellsub
 # order columns alphabetically as they are in vcf file:
                    cellsub <- cellsub[,sort(colnames(cellsub))]
                    # drop the genes with >80% missing data:
-                   cell <- cellsub[rowSums(is.na(cellsub))<0.8*ncol(cellsub),]                   
+                   cell <- cellsub[rowSums(is.na(cellsub))<(0.8*ncol(cellsub)),]                   
                    # save qqnormed data:
                    qnorm <- normalize.quantiles(cell)
                    colnames(qnorm) <- colnames(cell)
                    rownames(qnorm) <- rownames(cell)                  
+                   # add coordinates:
+                   qnormbed <- cbind(annobed[rownames(qnorm),],qnorm)
                    # extract residuals
                    cv <- cvall[colnames(cell),]
                    # baseline model:
@@ -95,21 +97,32 @@ colnames(cellsub) <- gsub("_SCAIP.*","",colnames(cellsub))
                    He <- (diag(rep(1,ncol(H)))-H)
                    Resqnorm <- as.matrix(qnorm) %*% He
                    sum(abs(t(He)-He)) #Should be almost 0
-                   #save the residuals:
                    Resqnorm <- data.frame(Resqnorm)
                    colnames(Resqnorm) <- gsub("[.]","-",colnames(qnorm))
-                   # add coordinates:
-                   qnormbed <- cbind(annobed[rownames(Resqnorm),],Resqnorm)
+                   # calculate PCs of residuals and save as covariates:
+                   # drop NAs:
+                   Resqnormclean <- Resqnorm[rowSums(is.na(Resqnorm))==0,]
+                   #PCA
+PCs <- prcomp_irlba(t(Resqnormclean), n=20)
+summary(PCs)
+mypcs <- as.data.frame(PCs$x)
+mypcs$dbgap.ID <- colnames(Resqnormclean)
+covs <- left_join(cv[,c("dbgap.ID","Batch","Sex","cage1","SCAIP1_6_genPC1","SCAIP1_6_genPC2","SCAIP1_6_genPC3")],mypcs)
+tcovs <- data.frame(t(covs))
+# generate covariates for FastQTL:
+for(i in 0:20){
+write.table(tcovs[1:(7+i),],paste0("covariates/",cn,t,"_covs_",i,"PCs.txt"), sep="\t", row.names=TRUE, col.names=FALSE, quote=FALSE)
+    }
                    ## # sort in order: # do not do this in R! doesn't work as it should for some reason
                    ## qnormbed[,1] <- as.numeric(qnormbed[,1])
                    ## qnormbed[,2] <- as.numeric(qnormbed[,2])
                    ## qnormbed <-qnormbed[order(qnormbed[,1],qnormbed[,2]),]
-                   write.table(qnormbed,paste0("./normalized_mean_residuals/",cn, t,"_unsorted-mean.bed"), sep="\t", col.names=T, quote=F,row.names=F)
+                   write.table(qnormbed,paste0("./qnormed_mean/",cn, t,"_unsorted-mean.bed"), sep="\t", col.names=T, quote=F,row.names=F)
                    # sort the bed file:
-                   system(paste0("(head -n 1 ./normalized_mean_residuals/",cn, t,"_unsorted-mean.bed && tail -n +2 ./normalized_mean_residuals/",cn, t,"_unsorted-mean.bed | sort -k 1,1 -k2,2n)> ./normalized_mean_residuals/",cn, t,"_mean.bed"))
-                   system(paste0("bgzip -f normalized_mean_residuals/",cn, t,"_mean.bed"))
-                   system(paste0("tabix -p bed normalized_mean_residuals/",cn, t,"_mean.bed.gz"))
+                   system(paste0("(head -n 1 ./qnormed_mean/",cn, t,"_unsorted-mean.bed && tail -n +2 ./qnormed_mean/",cn, t,"_unsorted-mean.bed | sort -k 1,1 -k2,2n)> ./qnormed_mean/",cn, t,"_mean.bed"))
+                   system(paste0("bgzip -f qnormed_mean/",cn, t,"_mean.bed"))
+                   system(paste0("tabix -p bed qnormed_mean/",cn, t,"_mean.bed.gz"))
                         }
         }
 
-### END 1/13/2021 JR
+### END 1/15/2021 JR
