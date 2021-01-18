@@ -1,7 +1,6 @@
-# this script fits mash on all the preprocessed SCAIP FastQTL eQTL mapping results and saves the model to be run on chunked data
-# 10/9/2020 JR
-# based on ./mashr.R
-# last edited and ran 11/24/2020 JR
+># this script fits mash on all the preprocessed SCAIP FastQTL eQTL mapping results and saves the model to be run on chunked data
+# based on ../../eQTL/FastQTL/nominals/mashr/mashr.R
+# 1/13/2021 JR
 
 library(ashr)
 library(mashr)
@@ -13,19 +12,16 @@ registerDoParallel(cores = cores)
 library(RhpcBLASctl)
 blas_set_num_threads(12)
 
-folder = "SCAIP1-6"
-pcs = 4
+pcs = 3
 
+## # done once and for all 1/14/2021:
 ## # 1. read in all the data and convert into a mashr object:
-## slope_files <-list.files(path=paste0("input/",folder),pattern=".*_slope.txt",full.name=T)
-## ## slope_files <- grep("*narrow*",slope_files, invert=TRUE, value=T)
-## datasets <- gsub("_slope.txt","",list.files(path=paste0("input/",folder),pattern=".*_slope.txt"))
-## SE_files <- list.files(path=paste0("input/",folder),pattern=".*_SE.txt", full.name=T)
-## ## SE_files <- grep("*narrow*",SE_files, invert=TRUE, value=T)
-## p_files <- list.files(path=paste0("input/",folder),pattern=".*_pvalue.txt", full.name=T)
-## lfsr_files <- list.files(path=paste0("input/",folder),pattern=".*lfsr.txt",full.name=T)
-## ## p_files <- grep("*narrow*",p_files, invert=TRUE, value=T)
-## # read in all the slopes:
+## slope_files <-list.files(path=paste0("input/"),pattern=".*_slope.txt",full.name=T)
+## datasets <- gsub("_slope.txt","",list.files(path=paste0("input/"),pattern=".*_slope.txt"))
+## SE_files <- list.files(path=paste0("input/"),pattern=".*_SE.txt", full.name=T)
+## p_files <- list.files(path=paste0("input/"),pattern=".*_pvalue.txt", full.name=T)
+## lfsr_files <- list.files(path=paste0("input/"),pattern=".*lfsr.txt",full.name=T)
+## # read in all the files:
 ## ldf_slope <- lapply(slope_files, read.table, sep="\t", header=T)
 ## ldf_SE <- lapply(SE_files, read.table, sep="\t", header=T)
 ## ldf_p <- lapply(p_files, read.table, sep="\t", header=T)
@@ -53,10 +49,10 @@ pcs = 4
 ## rownames(lfsrs) <- lfsrs[,1]
 ## lfsrs <- lfsrs[,-1]
 ## # save it for fututre use since this step takes forever:
-## save(slopes, SEs, pvalues, lfsrs,file=paste0("./mashr_input_",folder,".Rd"))
+## save(slopes, SEs, pvalues, lfsrs,file=paste0("./mashr_input.Rd"))
 
-load(paste0("./mashr_input_",folder,".Rd"))
-# 48% of rows have some NAs (51% for SCAIP1-6), but I think it doesn't work with NAs
+load(paste0("./mashr_input.Rd"))
+# 31.5% of rows have some NAs, but I think it doesn't work with NAs
 # so let's remove all NAs as well as Inf from SEs:
 SEs <- SEs[!rowSums(is.finite(as.matrix(SEs)))<ncol(SEs),]
 # remove the same rows from pvalue and slope matrixes:
@@ -67,15 +63,9 @@ sum(rowSums(is.na(as.matrix(slopes))>0))
 sum(rowSums(is.na(as.matrix(pvalues))>0))
 stopifnot(identical(rownames(slopes),rownames(SEs)))
 stopifnot(identical(rownames(slopes),rownames(pvalues)))
-# dim(SEs)
-# 2601493      20
-# let's try removing rows with >15 NAs:
-## slopes <- slopes[!rowSums(is.na(slopes))>5,]
-## SEs <- SEs[!rowSums(is.na(SEs))>5,]
-## pvalues <- pvalues[!rowSums(is.na(pvalues))>5,]
 
 # save the rownames:
-write.table(rownames(pvalues),paste0("rownames_mash_",folder,".txt"),row.names=F,col.names=F,quote=F)
+write.table(rownames(pvalues),paste0("rownames_mash.txt"),row.names=F,col.names=F,quote=F)
 
 data.temp = mash_set_data(as.matrix(slopes), as.matrix(SEs))
 # calculate Vhat:
@@ -96,6 +86,9 @@ U.c = cov_canonical(data)
 # this step estimates the covariances of the actual underlying effects
 U.ed = cov_ed(data, U.pca, subset=strong)
 
+# save all objects created up to now:
+save(data,U.c,U.ed,Vhat, file="mashr-fit-model_objects.Rd")
+
 # Step 3: fit the model
 # this fits a mixture model to the data, estimating the mixture proportions
 ## Sys.time()
@@ -104,12 +97,12 @@ U.ed = cov_ed(data, U.pca, subset=strong)
 Sys.time()
 m   = mash(data, c(U.c,U.ed),outputlevel=1)
 Sys.time()
-save(data,m,Vhat,file=paste0("mash-model-fit_",folder,".Rd"))
+save(data,m,Vhat,file=paste0("mash-model-fit.Rd"))
 
 # save the colnames:
-write.table(colnames(pvalues),"FastQTL_all_conditions.txt",sep="\n",col.names=F, row.names=F, quote=F)
+write.table(colnames(pvalues),"FastQTL_all_conditions-colnames.txt",sep="\n",col.names=F, row.names=F, quote=F)
 
-### END 11/25/2020
+### END 1/15/2021
 
 
 ## # select a good number of chunks:
@@ -121,4 +114,3 @@ write.table(colnames(pvalues),"FastQTL_all_conditions.txt",sep="\n",col.names=F,
 ##         }
 ## }
 
-### END 10/9/2020
