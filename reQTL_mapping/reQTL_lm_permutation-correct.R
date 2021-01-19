@@ -71,19 +71,18 @@ colnames(mesh3)[colnames(mesh3)=="mesh2[, \"pcorr\"]"] <- "interaction_A_lm_pcor
 
 mesh3$interaction_A_lm_pcorr.qval <- qvalue(mesh3$interaction_A_lm_pcorr)$qvalues
 
-eqtls <- sum(mesh3$interaction_A_lm_pcorr.qval<0.1)
-egenes <- length(unique(mesh3[mesh3$interaction_A_lm_pcorr.qval<0.1,"ENSG"]))
+eqtls <- sum(mesh3$interaction_A_lm_pcorr.qval<FDR)
+egenes <- length(unique(mesh3[mesh3$interaction_A_lm_pcorr.qval<FDR,"ENSG"]))
 
 tab <- t(c(contrast, eqtls,egenes))
 write.table(tab, paste0("ANOVA_signif_interactions_corrected_lm_",perms_number,".txt"),sep="\t",append=T, col.names=F, row.names=F, quote=F)
 
 # save the results:
 write.table(mesh3, paste0("reQTL_lm_results/",contrast,"_corrected_",perms_number,".txt"),sep="\t", row.names=F, quote=F)
-
-## make a qqplot and p-value histogram:
-## qq(mesh3$interaction_ANOVA.pvalue)
-## qq(mesh3$interaction_A_lmer_pcorr)
-## dev.off()
+# save the regenes:
+if(length(unique(mesh3ENSG[mesh3$interaction_A_lm_pcorr.qval<FDR]))>0){
+    write.table(unique(mesh3ENSG[mesh3$interaction_A_lm_pcorr.qval<FDR]),paste0("regenes/",contrast,"_corrected_",perms_number,".txt"),sep="\t", row.names=F, quote=F,col.names=F)
+    }
 
 permpoints <- -log10(sort(pvalues))
 expected_permpoints <- -log10(ppoints(length(permpoints)))
