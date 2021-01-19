@@ -80,8 +80,8 @@ write.table(tab, paste0("ANOVA_signif_interactions_corrected_lm_",perms_number,"
 # save the results:
 write.table(mesh3, paste0("reQTL_lm_results/",contrast,"_corrected_",perms_number,".txt"),sep="\t", row.names=F, quote=F)
 # save the regenes:
-if(length(unique(mesh3ENSG[mesh3$interaction_A_lm_pcorr.qval<FDR]))>0){
-    write.table(unique(mesh3ENSG[mesh3$interaction_A_lm_pcorr.qval<FDR]),paste0("regenes/",contrast,"_corrected_",perms_number,".txt"),sep="\t", row.names=F, quote=F,col.names=F)
+if(length(unique(mesh3$ENSG[mesh3$interaction_A_lm_pcorr.qval<FDR]))>0){
+    write.table(unique(mesh3$ENSG[mesh3$interaction_A_lm_pcorr.qval<FDR]),paste0("regenes/",contrast,"_corrected_",perms_number,".txt"),sep="\t", row.names=F, quote=F,col.names=F)
     }
 
 permpoints <- -log10(sort(pvalues))
