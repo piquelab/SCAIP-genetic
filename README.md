@@ -45,9 +45,10 @@ Filters:<br/>
 - tested only significant (10%FDR) eQTLs
 ###
 Steps:<br/>
+
 ### eQTL mapinng on mean GE
 ./eQTL_mapinng-on-mean - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 mean values from NB model
-strategy: FastQTL on residuals extracted from mean values from NB model <br/>
+strategy: FastQTL on quantile-normalized mean values from NB model while optimizing number of GE residuals PCs to remove <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.Bx.RData <br/>
 OUTPUT: ./eQTL_mapinng-on-mean/eQTL_output/*.GEPC0.nominals.eQTL.txt.gz <br/>
 ###
@@ -56,9 +57,15 @@ Filters:<br/>
 - min. 3 individuals per batch-condition<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
+###
+Steps:<br/>
+1. Quantile-normalize GE measure and calculate PCs on its residuals: ./eQTL_mappinng-on-mean/normalize-all.R
+2. Run dispersion-eQTL mapping: ./eQTL_mappinng-on-mean/run.FastQTL.nominals.sh
+3. Get the number of eQTLs, egenes per condition and save the egenes: ./eQTL_mappinng-on-mean/process-nominals-auto.sh
+
 ### dispersion eQTL mapping
 ./dispersionQTL - all the scripts and results of running FastQTL (and follow-up analyses) on SCAIP1-6 dispersion data <br/>
-strategy: FastQTL on dispersion residuals <br/>
+strategy: FastQTL on quantile-normalized dispersion while optimizing number of dispersion residuals PCs to remove <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.PhxNew.RData <br/>
 OUTPUT: dispersionQTL/disp-eQTL_output/*.GEPC0.nominals.eQTL.txt.gz <br/>
 ###
@@ -69,7 +76,7 @@ Filters:<br/>
 - MAF: >=10% in cohort
 ###
 Steps:<br/>
-1. Quantile-normalize dispersion measure and extract residuals: dispersionQTL/get_residuals.R
+1. Quantile-normalize dispersion measure and calculate PCs on its residuals: dispersionQTL/normalize-all.R
 2. Run dispersion-eQTL mapping: ./dispersionQTL/run.FastQTL.nominals.sh
 3. Get the number of eQTLs, egenes per condition and save the egenes: ./dispersionQTL/process-nominals.sh
 

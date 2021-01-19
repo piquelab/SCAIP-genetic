@@ -1,0 +1,52 @@
+# this script processes FastQTL output to summarize numbers of dispersion eQTLs in SCAIP1-6
+# based on ../../varianceQTL/FastQTL_on_residuals/nominals/analysis/process_nominals-auto.R
+# 1/11/2021
+
+library(data.table)
+library(qqman)
+library(qvalue)
+
+cluster <- "Tcell_LPS-EtOH"
+args = commandArgs(trailingOnly=TRUE)
+
+# get the PC number:
+if (length(args)>0){
+      pc <- args[1]
+      dataset <- args[2]
+      }
+
+# set FDR threshold;
+FDR <- 0.1
+
+# concatenate the chunked FastQTL output:
+# do only once:
+if(!file.exists(paste0("disp-eQTL_output/",dataset,".GEPC",pc,".nominals.eQTL.txt.gz"))){
+system(paste0("for j in $(seq 1 30); do
+     cat disp-eQTL_output/",dataset,".GEPC",pc,".nominals.chunk$j.txt
+done | gzip -c > disp-eQTL_output/",dataset,".GEPC",pc,".nominals.eQTL.txt.gz;
+done"
+))
+# remove the chunks:
+system(paste0("rm disp-eQTL_output/",dataset,".GEPC",pc,".nominals.chunk*"))
+}
+
+disp.qq <- fread(paste0("zcat disp-eQTL_output/", dataset, ".GEPC", pc, ".nominals.eQTL.txt.gz"), sep=" ",head=F,col.names=c("pid","sid","distace","pvalue","estimate"))
+disp.qq$qvalue <- qvalue(disp.qq$pvalue)$qvalues
+
+tab <- t(c(dataset,pc,sum(disp.qq$qvalue<FDR), length(unique(disp.qq$pid[disp.qq$qvalue<FDR]))))
+
+# write the number of eQTLs, egenes:
+write.table(tab, file=paste0("dispersion_nominals_eqtls-egenes_summary.txt"), sep="\t", quote=FALSE, col.names=FALSE, row.names=FALSE, append=TRUE)
+
+# save the dispersion genes:
+if(length(unique(disp.qq$pid[disp.qq$qvalue<FDR]))>0){
+write.table(unique(disp.qq$pid[disp.qq$qvalue<FDR]),paste0("dispersion_egenes/",pc,"PCs_",dataset,"_genes.txt"),quote=F, row.names=F, col.names=F)
+}
+
+# make QQ plots:
+png(paste0("./plots/QQ_", dataset, "_",pc,"PCs_dispersion.png"))
+qq(disp.qq$pvalue, main=paste0("QQ plot of dispersion FastQTL analysis for ", dataset, " ",pc," PCs"))
+dev.off()
+
+
+### END 1/11/2021
