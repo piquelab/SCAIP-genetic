@@ -15,9 +15,9 @@ Filters:<br/>
 - gene: 0.1 CPM in more than 20% of the samples<br/>
 ###
 Steps:<br/>
-1. Normalize GE data and extract residuals: ./eQTL/normalize-all.R
+1. Normalize GE data and extract residuals: ./eQTL_mapping/normalize-all.R
 2. Calculate GE PCs (to correct for in eQTL mapping): ./eQTL_mapping/GE_PCA.sh
-3. Run eQTL mapping: ./eQTL/run.FastQTL.nominals-all-covs.sh -> ./eQTL_mapping/concatenate.chunks.sh
+3. Run eQTL mapping: ./eQTL_mapping/run.FastQTL.nominals-all-covs.sh
 4. Check removing how many GE PCs generates the most egenes: ./eQTL_mapping/process-nominals.sh
 5. Get egenes and eQTL coordinates from optimal model results: ./eQTL_mapping/get-egenes-eQTLs.sh
 ### mashr_eQTL
