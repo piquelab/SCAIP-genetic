@@ -3,10 +3,10 @@
 This directory /wsu/home/groups/piquelab/SCAIP/SCAIP1-6_protein-coding contains all the scripts and results of SCAIP1-6 genetic analyses on protein-coding genes only <br/>
 
 ### eQTL mapping
-./eQTL_mapping - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 pseudo-bulk GE data<br/>
+./eQTL - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 pseudo-bulk GE data<br/>
 strategy: FastQTL on pseudo-bulk residuals <br/>
 INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew_output/Filter2/YtX_sel.comb.RData <br/>
-OUTPUT: ./eQTL_mapping/eQTL_output/*.GEPC0.nominals.eQTL.txt.gz <br/>
+OUTPUT: ./eQTL/eQTL_output/*.GEPC0.nominals.eQTL.txt.gz <br/>
 ###
 Filters:<br/>
 - inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew.R<br/>
@@ -15,15 +15,15 @@ Filters:<br/>
 - gene: 0.1 CPM in more than 20% of the samples<br/>
 ###
 Steps:<br/>
-1. Normalize GE data and extract residuals: ./eQTL_mapping/normalize-all.R
-2. Calculate GE PCs (to correct for in eQTL mapping): ./eQTL_mapping/GE_PCA.sh
-3. Run eQTL mapping: ./eQTL_mapping/run.FastQTL.nominals-all-covs.sh
-4. Check removing how many GE PCs generates the most egenes: ./eQTL_mapping/process-nominals.sh
-5. Get egenes and eQTL coordinates from optimal model results: ./eQTL_mapping/get-egenes-eQTLs.sh
+1. Normalize GE data and extract residuals: ./eQTL/normalize-all.R
+2. Calculate GE PCs (to correct for in eQTL mapping): ./eQTL/GE_PCA.sh
+3. Run eQTL mapping: ./eQTL/run.FastQTL.nominals-all-covs.sh
+4. Check removing how many GE PCs generates the most egenes: ./eQTL/process-nominals.sh
+5. Get egenes and eQTL coordinates from optimal model results: ./eQTL/get-egenes-eQTLs.sh
 ### mashr_eQTL
-./mashr_eQTL - all the scripts and results of running mashr (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL_mapping <br/>
+./mashr_eQTL - all the scripts and results of running mashr (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL <br/>
 strategy: mashr on eQTL results from all treatments and conditions at once <br/>
-INPUT: ./eQTL_mapping/eQTL_output/*.GEPC0.nominals.eQTL.txt.gz  <br/>
+INPUT: ./eQTL/eQTL_output/*.GEPC0.nominals.eQTL.txt.gz  <br/>
 OUTPUT:  <br/>
 ###
 Filters:<br/>
@@ -36,7 +36,7 @@ Steps:<br/>
 4. Make upset plot of mashr results across conditions: ./mashr_eQTL/plot_upset_mashr.R
 
 ### reQTL mapping
-./reQTL_mapping - all the scripts and results of reQTL mapping (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL_mapping <br/>
+./reQTL - all the scripts and results of reQTL mapping (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL <br/>
 strategy: lm testing dosage*treatment interaction using pair-wise trt-control models on union of significant eQTLs <br/>
 INPUT:  <br/>
 OUTPUT:  <br/>
@@ -82,7 +82,7 @@ Steps:<br/>
 
 ### LDA eQTL mapping
 strategy: lm testing dosage*treatment interaction using GE bulked along 3 bins <br/>
-INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/9_RNA.dynamic2_output/Filter2_DEG6571/Old/LDA{1,2}Bin/YtX.*.ave.RData <br/>
+INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/9_RNA.dynamic2_output/Filter2_DEG6571/Old/LDA{1,2}Bin/YtX.*.ave.RData 0_ncell.{cell}.ave.RData<br/>
 OUTPUT:  <br/>
 ###
 Filters:<br/>
@@ -90,5 +90,9 @@ Filters:<br/>
 - eQTL mapping window: +/-50kb<br/>
 - MAF: >=10% in cohort
 - gene: 0.1 CPM in more than 20% of the samples<br/>
+- min. 5 cells/individual/condition
+- min 2 bins with min. 5 cells/individual/condition
 ###
 Steps:<br/>
+1. Normalize per-bin GE data and extract residuals: ./LDA-eQTL/normalize-all.R
+2. Run mock eQTL mapping w/FastQTL to get testable gene-SNP pairs: ./LDA-eQTL/run.FastQTL.nominals.sh
