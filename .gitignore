@@ -2,13 +2,13 @@
 
  # ignored file types:
 *IGNORE*
- *~
- *Rdata
- *Rd
- *.gz
- STD*
- *.[eo][0-9]
- *txt
- slurm-*
+*~
+*Rdata
+*Rd
+*.gz
+STD*
+*.[eo][0-9]
+*txt
+slurm-*
  # except:
- !datasets.txt
+!datasets.txt
