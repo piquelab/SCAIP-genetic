@@ -1,10 +1,9 @@
 # this script fits mash on all the preprocessed SCAIP FastQTL eQTL mapping results and saves the model to be run on chunked data
-# based on https://stephenslab.github.io/mashr/articles/eQTL_outline.html
-# 1/13/2021 JR
+# based on ../mashr_eQTL/mashr-fit-model.R
+# 2/5/2021 JR
 
 library(ashr)
 library(mashr)
-
 library(data.table)
 library(dplyr)
 library(doParallel)
@@ -15,7 +14,7 @@ blas_set_num_threads(12)
 
 pcs = 3
 
-## # done once and for all 1/14/2021:
+## # done once and for all 2/4/2021:
 ## # 1. read in all the data and convert into a mashr object:
 ## slope_files <-list.files(path=paste0("input/"),pattern=".*_slope.txt",full.name=T)
 ## datasets <- gsub("_slope.txt","",list.files(path=paste0("input/"),pattern=".*_slope.txt"))
@@ -68,9 +67,9 @@ stopifnot(identical(rownames(slopes),rownames(pvalues)))
 # save the rownames:
 write.table(rownames(pvalues),paste0("rownames_mash.txt"),row.names=F,col.names=F,quote=F)
 
-# sample 200k random tests:
+# sample 20k random tests:
 set.seed(12)
-sset <- sample(c(1:nrow(slopes)),200000)
+sset <- sample(c(1:nrow(slopes)),20000)
 data.temp = mash_set_data(as.matrix(slopes[sset,]), as.matrix(SEs[sset,]))
 # calculate Vhat:
 Vhat = estimate_null_correlation_simple(data.temp)
@@ -105,20 +104,8 @@ Sys.time()
 m   = mash(data.random, c(U.c,U.ed),outputlevel=1)
 Sys.time()
 save(data,data.random,m,Vhat,file=paste0("mash-model-fit.Rd"))
-# 11664 * 'error: chol(): decomposition failed'
 
 # save the colnames:
 write.table(colnames(pvalues),"FastQTL_all_conditions-colnames.txt",sep="\n",col.names=F, row.names=F, quote=F)
 
-### END 1/25/2021
-
-
-## # select a good number of chunks:
-## tests <- nrow(data$Bhat)
-## for(i in 1:round(tests/2)){
-## div <- tests/i
-## if(floor(div)==div){
-##     print(paste0(i,"  ",div))
-##         }
-## }
-
+### END 2/5/2021

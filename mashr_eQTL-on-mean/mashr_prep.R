@@ -1,19 +1,20 @@
-# this script fits mash on all the preprocessed SCAIP FastQTL eQTL mapping results and generates the input for mashr (pvalues,SEs)
-# based on ../../eQTL/FastQTL/nominals/mashr/mashr_prep.R
-# 1/13/2021 JR
+# this script fits mash on all the preprocessed SCAIP FastQTL eQTL mapping on mean (from NB) results and generates the input for mashr (pvalues,SEs)
+# based on  ../mashr_eQTL/mashr_prep.R
+# 2/15/2021 JR
 
 library(ashr)
 library(data.table)
 
-args = commandArgs(trailingOnly=TRUE)
+dataset <- "Bcell_CTRL"
 
+args = commandArgs(trailingOnly=TRUE)
 if (length(args)>0){
       dataset <- args[1]
     }
 
-pcs = 3
+pcs = 8
 
-eQTL_dir <- "../eQTL_mapping/eQTL_output/"
+eQTL_dir <- "../eQTL-on-mean/mean-eQTL_output/"
 
 # read in, grab effect estimate and its standard error
 m <- fread(paste0(eQTL_dir, dataset,".GEPC",pcs,".nominals.eQTL.txt.gz"),sep=" ")
@@ -45,4 +46,4 @@ write.table(lfsr, paste0("input/", dataset, "_lfsr.txt"), sep="\t", col.names=T,
 # gzip all:
 system(paste0("for file in input/", dataset,"*txt ; do gzip -f input/$file > input/$file.gz; done"))
 
-### END 1/13/2021 JR
+### END 2/15/2021 JR

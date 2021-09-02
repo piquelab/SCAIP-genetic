@@ -4,6 +4,7 @@
 
 library(preprocessCore)
 library(dplyr)
+library(irlba)
 
 # set min number of individuals per batch:
 indivBatchFilter <- 3
@@ -116,7 +117,7 @@ write.table(tcovs[1:(7+i),],paste0("covariates/",cn,t,"_covs_",i,"PCs.txt"), sep
                    ## qnormbed[,1] <- as.numeric(qnormbed[,1])
                    ## qnormbed[,2] <- as.numeric(qnormbed[,2])
                    ## qnormbed <-qnormbed[order(qnormbed[,1],qnormbed[,2]),]
-                   write.table(qnormbed,paste0("./normalized_dispersion_residuals/",cn, t,"_dispersion_unsorted.bed"), sep="\t", col.names=T, quote=F,row.names=F)
+                   write.table(qnormbed,paste0("./qnormed_dispersion/",cn, t,"_dispersion_unsorted.bed"), sep="\t", col.names=T, quote=F,row.names=F)
                    # sort the bed file:
                    system(paste0("(head -n 1 ./qnormed_dispersion/",cn, t,"_dispersion_unsorted.bed && tail -n +2 ./qnormed_dispersion/",cn, t,"_dispersion_unsorted.bed | sort -k 1,1 -k2,2n)> ./qnormed_dispersion/",cn, t,"_dispersion.bed"))
                    system(paste0("bgzip -f qnormed_dispersion/",cn, t,"_dispersion.bed"))

@@ -1,7 +1,7 @@
 # this script runs mashr on prepped eQTL results to find response and cell-type-specific eQTLs
-# based on mashr vignette https://stephenslab.github.io/mashr/articles/intro_mash.html
+# based on ../mashr_eQTL/mashr_compute_posterior_chunks.R
 # prereq: ./mashr-fit-model.R
-# 1/25/2021 JR
+# 2/15/2021 JR
 
 library(ashr)
 library(mashr)
@@ -15,7 +15,7 @@ blas_set_num_threads(cores)
 library("profmem")
 
 nchunks <- 500
-chunk <- 5
+chunk <- 10
 
 args = commandArgs(trailingOnly=TRUE)
 # get the PC number:
@@ -47,16 +47,16 @@ m.chunk <- mash_compute_posterior_matrices(g=m,data=data.chunk)
 Sys.time()
 
 # save the lfsr results:
-write.table(m.chunk$lfsr,paste0("output/lfsr/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=F,col.names=F)
+write.table(m.chunk$lfsr,paste0("output/lfsr/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=T,col.names=F)
 # save the posterior means results:
-write.table(m.chunk$PosteriorMean,paste0("output/posterior_mean/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=F,col.names=F)
+write.table(m.chunk$PosteriorMean,paste0("output/posterior_mean/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=T,col.names=F)
 # save the posterior SDs results:
-write.table(m.chunk$PosteriorSD,paste0("output/posterior_SD/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=F,col.names=F)
-write.table(m.chunk$lfdr,paste0("output/lfdr/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=F,col.names=F)
-write.table(m.chunk$NegativeProb,paste0("output/NegativeProb/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=F,col.names=F)
+write.table(m.chunk$PosteriorSD,paste0("output/posterior_SD/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=T,col.names=F)
+write.table(m.chunk$lfdr,paste0("output/lfdr/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=T,col.names=F)
+write.table(m.chunk$NegativeProb,paste0("output/NegativeProb/all_chunk", chunk,".txt"),sep="\t",quote=F, row.names=T,col.names=F)
 
 
-### END 1/25/2021 JR
+### END 2/15/2021 JR
 
 sessionInfo()
 

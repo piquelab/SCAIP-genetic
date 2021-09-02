@@ -1,10 +1,11 @@
-# this script fits mash on all the preprocessed SCAIP FastQTL eQTL mapping results and generates the input for mashr (pvalues,SEs)
-# based on ../../eQTL/FastQTL/nominals/mashr/mashr_prep.R
-# 1/13/2021 JR
+# this script fits mash on all the preprocessed SCAIP FastQTL dispersion eQTL mapping results and generates the input for mashr (pvalues,SEs)
+# based on ../mashr_eQTL/mashr_prep.R
+# 2/4/2021 JR
 
 library(ashr)
 library(data.table)
 
+dataset='Bcell_CTRL'
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)>0){
@@ -13,10 +14,10 @@ if (length(args)>0){
 
 pcs = 3
 
-eQTL_dir <- "../eQTL_mapping/eQTL_output/"
+QTL_dir <- "../dispersionQTL/disp-eQTL_output/"
 
 # read in, grab effect estimate and its standard error
-m <- fread(paste0(eQTL_dir, dataset,".GEPC",pcs,".nominals.eQTL.txt.gz"),sep=" ")
+m <- fread(paste0(QTL_dir, dataset,".GEPC",pcs,".nominals.eQTL.txt.gz"),sep=" ") 
 colnames(m) <- c("ENSG","varID", "distance", "pvalue", "slope")
 # add unique SNP identifier:
 m$uniqID <- paste0(m$ENSG,"_",m$varID)
@@ -45,4 +46,4 @@ write.table(lfsr, paste0("input/", dataset, "_lfsr.txt"), sep="\t", col.names=T,
 # gzip all:
 system(paste0("for file in input/", dataset,"*txt ; do gzip -f input/$file > input/$file.gz; done"))
 
-### END 1/13/2021 JR
+### END 2/4/2021 JR

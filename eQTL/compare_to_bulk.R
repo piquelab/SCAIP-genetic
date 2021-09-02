@@ -62,12 +62,12 @@ merged[merged$qvalue<0.1 & merged$bqval<0.1,"significance"] <- "both"
 # sort to keep significant on top:
 merged$significance <- factor(merged$significance, levels=c("neither", "both", "bulk only", "sc only"))
 
-cor=cor.test(merged$slope, merged$slope_sc)$estimate
-pval=cor.test(merged$slope, merged$slope_sc)$p.value
+cor=cor.test(merged$slope, merged$slope_sc, method="spearman")$estimate
+pval=cor.test(merged$slope, merged$slope_sc, method="spearman")$p.value
 
 merged_sig <- filter(merged, !significance=="neither")
-cor_sig=cor.test(merged_sig$slope, merged_sig$slope_sc)$estimate
-pval_sig=cor.test(merged_sig$slope, merged_sig$slope_sc)$p.value
+cor_sig=cor.test(merged_sig$slope, merged_sig$slope_sc, method="spearman")$estimate
+pval_sig=cor.test(merged_sig$slope, merged_sig$slope_sc, method="spearman")$p.value
 
 # save the correlation:
 tab <- t(c(cluster, cor, pval, cor_sig, pval_sig))

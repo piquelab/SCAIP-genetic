@@ -1,21 +1,24 @@
 # this script compares number of significant results from FastQTL and mashr on FastQTL results
-# 10/13/2020 JR
-# last edited and ran 12/8/2020 JR: now comparing ashr lfsr against mashr lfsr
+# 2/1/2021 JR
 
 library(data.table)
 library(dplyr)
 
-folder <- "SCAIP1-6"
 thresh <- 0.1
 
 # load the mashr results:
 mlfsr <- data.frame(fread("output/lfsr/lfsr_mashr_all.txt.gz"))
 # add colnames:
-cols <- read.table("FastQTL_all_conditions_proper.txt",stringsAsFactors=F)[,1]
+cols <- read.table("FastQTL_all_conditions-colnames.txt",stringsAsFactors=F)[,1]
 colnames(mlfsr) <- cols
 # add rownames:
-rows <- read.table("rownames_mash_SCAIP1-6.txt",stringsAsFactors=F)[,1]
+rows <- read.table("rownames_mash_updated.txt",stringsAsFactors=F)[,1]
+## # remove the removed rows:
+## rows <- rows[-grep("ENSG00000166710",rows)]
+## rows <- rows[-grep("ENSG00000167996",rows)]
 rownames(mlfsr) <- rows
+## # save the updated rownames:
+## write.table(rows,"rownames_mash_updated.txt",row.names=F,col.names=F,quote=F)
 
 ## sum(mlfsr<0.1)
 ## sum(mlfsr<0.1)/nrow(mlfsr)/ncol(mlfsr)
@@ -37,10 +40,55 @@ mlfsr_gene <- mlfsr_gene[,-1]
 # fix column names:
 colnames(mlfsr_gene) <- gsub("[.]","+",colnames(mlfsr_gene))
 colSums(mlfsr_gene>0)
+sum(rowSums(mlfsr_gene>0)>0)
+
+cells <- unique(gsub("_.*","",colnames(mlfsr)))
+trts <- unique(gsub(".*_","",colnames(mlfsr)))
+l=list()
+for(cell in cells[1:4]){
+    df <- mlfsr[,grep(cell,colnames(mlfsr))]
+    print(cell)
+       sdf <- data.frame(summary(as.factor(rowSums(df<0.1))))
+    sdf$count <- rownames(sdf)
+    l[[cell]] <- sdf
+}
+for(trt in trts[1:5]){
+    df <- mlfsr[,grep(trt,colnames(mlfsr))]
+    print(trt)
+   sdf <- data.frame(summary(as.factor(rowSums(df<0.1))))
+    sdf$count <- rownames(sdf)
+    l[[trt]] <- sdf
+    }
+
+
+gl=list()
+for(cell in cells[1:4]){
+    df <- mlfsr_gene[,grep(cell,colnames(mlfsr_gene))]
+    print(cell)
+       sdf <- data.frame(summary(as.factor(rowSums(df==1))))
+    sdf$count <- rownames(sdf)
+    gl[[cell]] <- sdf
+}
+for(trt in trts[1:5]){
+    df <- mlfsr_gene[,grep(trt,colnames(mlfsr_gene))]
+    print(trt)
+   sdf <- data.frame(summary(as.factor(rowSums(df==1))))
+    sdf$count <- rownames(sdf)
+    gl[[trt]] <- sdf
+    }
+
+
+# get number of unique to each column:
+mlfsr_o <- mlfsr_gene[,1:20]
+
+for(i in 1:ncol(mlfsr_o)){
+    print(colnames(mlfsr_o)[i])
+print(    sum(mlfsr_o[,i]==1 & rowSums(mlfsr_o[,-i])==0 ))
+    }
 
 
 # load the ashr results:
-load(paste0("./mashr_input_",folder,".Rd"))
+load(paste0("./mashr_input.Rd"))
 lfsr <- lfsrs
 
 # change all significant values to 1, and insignificant to 0:
@@ -63,6 +111,7 @@ colnames(lfsr_gene) <- gsub("[.]","+",colnames(lfsr_gene))
 colSums(lfsr_gene>0, na.rm = T)
 
 sum(rowSums(lfsr_gene, na.rm = T)>0)
+length(unique(gsub("_.*","",rownames(mlfsr[rowSums(mlfsr[,1:20], na.rm = T)>0,]))))
 
 ## # plot matrix of correlations:
 ## # set up colors:
