@@ -11,11 +11,11 @@ library(doParallel)
 cores <- as.integer(Sys.getenv("SLURM_STEP_TASKS_PER_NODE"))
 registerDoParallel(cores = cores)
 library(RhpcBLASctl)
-blas_set_num_threads(12)
+blas_set_num_threads(1)
 
-pcs = 3
+pcs = 4
 
-## # done once and for all 1/14/2021:
+## # done once and for all 11/2/2021:
 ## # 1. read in all the data and convert into a mashr object:
 ## slope_files <-list.files(path=paste0("input/"),pattern=".*_slope.txt",full.name=T)
 ## datasets <- gsub("_slope.txt","",list.files(path=paste0("input/"),pattern=".*_slope.txt"))
@@ -105,12 +105,13 @@ Sys.time()
 m   = mash(data.random, c(U.c,U.ed),outputlevel=1)
 Sys.time()
 save(data,data.random,m,Vhat,file=paste0("mash-model-fit.Rd"))
-# 11664 * 'error: chol(): decomposition failed'
+# Some mixture components result in non-finite likelihoods, either due to numerical underflow/overflow, or due to invalid covariance matrices 1
+# 914, 1945, 1976, 2007, 2038, 2069, 2100, 2131, 2162, 2193, 2224, 2255, 2286, 2317, 2348, 2379, 2410, 2441, 2472, 2503, 2534, 2565, 2596, 2627, 2658, 2689,  2720, 2751, 2782, 2813, 2844, 2875, 2906, 2937, 2968, 2999, 3030, 3061, 3092, 3123, 3154, 3185, 3216, 3247
 
 # save the colnames:
 write.table(colnames(pvalues),"FastQTL_all_conditions-colnames.txt",sep="\n",col.names=F, row.names=F, quote=F)
 
-### END 1/25/2021
+### END 11/28/2021
 
 
 ## # select a good number of chunks:

@@ -17,7 +17,7 @@ if (length(args)>0){
     dataset <- args[1]
    PCs <- args[2]
  }
-PCs <- "3"
+PCs <- "4"
 
 results <- fread(paste0("zcat ./eQTL_output/", dataset, ".GEPC", PCs,".nominals.eQTL.txt.gz"), sep=" ")
 results <- data.frame(results)

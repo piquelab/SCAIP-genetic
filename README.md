@@ -35,17 +35,6 @@ Steps:<br/>
 3. Run mashr on chunked data using pre-saved model fit: ./mashr_eQTL/mashr_compute_posterior_chunks.sh
 4. Make upset plot of mashr results across conditions: ./mashr_eQTL/plot_upset_mashr.R
 
-### reQTL mapping
-./reQTL - all the scripts and results of reQTL mapping (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL <br/>
-strategy: lm testing dosage\*treatment interaction using pair-wise trt-control models on union of significant eQTLs <br/>
-INPUT:  <br/>
-OUTPUT:  <br/>
-###
-Filters:<br/>
-- tested only significant (10%FDR) eQTLs
-###
-Steps:<br/>
-
 ### eQTL mapinng on mean GE
 ./eQTL_mapinng-on-mean - all the scripts and results of eQTL mapping (and follow-up analyses) on SCAIP1-6 mean values from NB model
 strategy: FastQTL on quantile-normalized mean values from NB model while optimizing number of GE residuals PCs to remove <br/>
@@ -79,25 +68,3 @@ Steps:<br/>
 1. Quantile-normalize dispersion measure and calculate PCs on its residuals: dispersionQTL/normalize-all.R
 2. Run dispersion-eQTL mapping: ./dispersionQTL/run.FastQTL.nominals.sh
 3. Get the number of eQTLs, egenes per condition and save the egenes: ./dispersionQTL/process-nominals.sh
-
-### LDA eQTL mapping
-./LDA-eQTL/ -  all the scripts and results of eQTL\*LDA interaction mapping (and follow-up analyses) on SCAIP1-6 gene expression data
-strategy: lm testing dosage\*treatment interaction using GE bulked along 3 bins <br/>
-INPUT: /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/9_RNA.dynamic2_output/Filter2_DEG6571/Old/LDA{1,2}Bin/YtX.\*.ave.RData 0_ncell.{cell}.ave.RData<br/>
-OUTPUT: ./LDA-eQTL/lm_results/LDA{1,2}/*_stratified_FDR.txt <br/>
-###
-Filters:<br/>
-- inheritted from /nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/9_RNA.dynamic2.R
-- eQTL mapping window: +/-50kb<br/>
-- MAF: >=10% in cohort
-- gene: 0.1 CPM in more than 20% of the samples<br/>
-- min. 5 cells/individual/condition
-- min 2 bins with min. 5 cells/individual/condition
-###
-Steps:<br/>
-1. Normalize per-bin GE data and extract residuals: ./LDA-eQTL/normalize-all.R
-2. Run mock eQTL mapping w/FastQTL to get testable gene-SNP pairs: ./LDA-eQTL/run.FastQTL.nominals.sh
-3. Get dosages of all the testable SNPs: ./LDA-eQTL/get_dosages.sh
-4. Test for LDA*SNP interaction effect on GE: ./LDA-eQTL/test_LDA-SNP.sh
-5. FDR-correct separately the eQTLs and non-eQTLs: ./LDA-eQTL/stratified_FDR_correct.sh
-6. Make plots of significant examples: ./LDA-eQTL/LDASNP_boxplots.sh ./LDA-eQTL/LDASNP_scatterplot.sh

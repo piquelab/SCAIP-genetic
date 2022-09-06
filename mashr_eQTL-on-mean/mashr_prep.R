@@ -44,6 +44,6 @@ colnames(lfsr)[2] <- dataset
 write.table(lfsr, paste0("input/", dataset, "_lfsr.txt"), sep="\t", col.names=T, row.names=F, quote=F)
 
 # gzip all:
-system(paste0("for file in input/", dataset,"*txt ; do gzip -f input/$file > input/$file.gz; done"))
+system(paste0("for file in input/", dataset,"*txt ; do gzip $file; done"))
 
 ### END 2/15/2021 JR

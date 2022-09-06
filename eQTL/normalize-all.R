@@ -1,4 +1,4 @@
-># this script takes in an R object matrix with summed GE counts for each individual-condition, voom-normalizes it, extracts residuals and saves it in bed format
+# this script takes in an R object matrix with summed GE counts for each individual-condition, voom-normalizes it, extracts residuals and saves it in bed format
 # based on /wsu/home/groups/piquelab/SCAIP/eQTL/FastQTL/GE_files/normalize-all_JWcounts.R
 # JR 1/7/2021
 
@@ -19,7 +19,7 @@ cells <- unique(gsub("_.*","",colnames(YtX)))
 
 # add coordinates to make the bed files:
 # load the annotation file gencode gchr37 v31:
-anno <- read.table("/wsu/home/groups/piquelab/data/gencode/Gencode_human/release_31/gencode.v31.annotation.gff3.gz",header=F,stringsAsFactors=F)
+anno <- read.table("/wsu/home/groups/piquelab/data/gencode/Gencode_human/release_31/GRCh37_mapping/gencode.v31lift37.annotation.gff3.gz",header=F,stringsAsFactors=F)
 anno <- filter(anno,V3=="gene")
 anno$gene_id <- gsub("ID=","",anno$V9)
 anno$gene_id <- gsub(";.*","",anno$gene_id)
@@ -27,10 +27,14 @@ anno$gene_id <- gsub(";.*","",anno$gene_id)
 anno <- anno[-grep("PAR_Y",anno$gene_id),]
 anno$g.id <- gsub("[.].*","",anno$gene_id)
 rownames(anno) <- anno$gene_id
+# subset to protein-coding only: # don't they're already subsetted to protein-coding according to the reference Julong used
+anno$gene_type <- gsub(".*gene_type=","",anno$V9)
+anno$gene_type <- gsub(";.*","",anno$gene_type)
+## anno <- anno[anno$gene_type=="protein_coding",]
 
 # add annotation info to GE data:
 # remove the genes missing from the annotation:
-YtX <- YtX[rownames(YtX) %in% rownames(anno),] # 0 missing
+YtX <- YtX[rownames(YtX) %in% rownames(anno),] # 87 missing
 bed <- anno[rownames(YtX),c(1,4,5,10,7)]
 colnames(bed) <- c("Chr", "min", "max", "ID", "strand")
 bed[,1] <- gsub("chr", "", bed[,1])
@@ -46,6 +50,8 @@ YtX <- cbind(bed,YtX)
 
 # remove sex and mt chr (done already for this data, but make sure)
 YtX <- YtX[YtX[,1] %in% c(1:22),]
+# sort by coordinates:
+YtX <- YtX %>% arrange(Chr, start, end)
 
 # cycle through all the trts:
 for(trt in treats){
@@ -121,4 +127,4 @@ system(paste0("tabix -p bed normalized_GE_residuals/", cell, trt, ".bed.gz"))
     }
 
 sessionInfo()
-### END 1/7/2021
+### END 10/31/2021

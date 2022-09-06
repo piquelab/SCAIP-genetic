@@ -10,11 +10,11 @@ library(doParallel)
 cores <- as.integer(Sys.getenv("SLURM_STEP_TASKS_PER_NODE"))
 registerDoParallel(cores = cores)
 library(RhpcBLASctl)
-blas_set_num_threads(12)
+blas_set_num_threads(1)
 
-pcs = 8
+pcs = 7
 
-## # done once and for all 2/15/2021:
+## # done once and for all 11/2/2021:
 ## # 1. read in all the data and convert into a mashr object:
 ## slope_files <-list.files(path=paste0("input/"),pattern=".*_slope.txt",full.name=T)
 ## datasets <- gsub("_slope.txt","",list.files(path=paste0("input/"),pattern=".*_slope.txt"))
@@ -114,7 +114,7 @@ save(data,data.random,m,Vhat,file=paste0("mash-model-fit.Rd"))
 # save the colnames:
 write.table(colnames(pvalues),"FastQTL_all_conditions-colnames.txt",sep="\n",col.names=F, row.names=F, quote=F)
 
-### END 2/15/2021
+### END 11/3/2021
 
 
 ## # select a good number of chunks:

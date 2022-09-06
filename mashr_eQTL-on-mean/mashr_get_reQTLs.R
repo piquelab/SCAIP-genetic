@@ -59,8 +59,10 @@ save(uum, file="mashr-reQTLs_union-unshared-magnitude2-mlfsr0.1.Rd")
 colSums(mlfsr<0.1)
 ## unique(rowSums(mlfsr<0.1))
 ## summary(as.factor(rowSums(mlfsr<0.1)))
-
+length(unique(rownames(mlfsr[rowSums(mlfsr<0.1)>0,])))
 # summarize the data per-gene:
+egenes <- lapply(eqtl, function(x) unique(gsub("[.].*","",x)))  
+
 
 # get sharing and specificity:
 l5 <- character()

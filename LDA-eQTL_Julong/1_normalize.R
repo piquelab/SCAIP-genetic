@@ -47,13 +47,13 @@ ncell <- ncell%>%
   mutate(dbgap_cell_trt=gsub("_[123]", "", x), bin=gsub(".*_", "", x))
 ##
 bin_count <- ncell%>%
-   filter(ncell>=ncellbin)%>% 
+   dplyr::filter(ncell>=ncellbin)%>% 
    group_by(dbgap_cell_trt)%>%
    summarize(nbin=n_distinct(bin),.groups="drop")%>%as.data.frame()
 
 ## cell_counts <- data.frame(ncell %>% group_by(dbgap_cell_trt) %>% summarize(cells=sum(ncell)))
 ncell <- ncell%>%left_join(bin_count, by="dbgap_cell_trt")
-keep <- ncell%>%filter(ncell>=ncellbin, nbin>=minbin)%>%dplyr::pull(x)
+keep <- ncell%>%dplyr::filter(ncell>=ncellbin, nbin>=minbin)%>%dplyr::pull(x)
 
 YtX <- YtX[, keep]
 
@@ -70,9 +70,9 @@ anno <- read.table("/wsu/home/groups/piquelab/data/gencode/Gencode_human/release
 
 anno <- anno%>%mutate(V1=gsub("chr", "", V1),
    gene_id=gsub("ID=|;.*", "", V9))%>%
-   filter(!grepl("PAR_Y", gene_id), V3=="gene") #grepl("protein_coding", anno$V9))
+   dplyr::filter(!grepl("PAR_Y", gene_id), V3=="gene") #grepl("protein_coding", anno$V9))
 
-anno <- anno%>%dplyr::filter(V1%in%c(1:22))
+## anno <- anno%>%dplyr::filter(V1%in%c(1:22))
 
 rownames(anno) <- anno$gene_id
 

@@ -10,11 +10,11 @@ library(doParallel)
 cores <- as.integer(Sys.getenv("SLURM_STEP_TASKS_PER_NODE"))
 registerDoParallel(cores = cores)
 library(RhpcBLASctl)
-blas_set_num_threads(12)
+blas_set_num_threads(1)
 
-pcs = 3
+pcs = 5
 
-## # done once and for all 2/4/2021:
+## # done once and for all 11/3/2021:
 ## # 1. read in all the data and convert into a mashr object:
 ## slope_files <-list.files(path=paste0("input/"),pattern=".*_slope.txt",full.name=T)
 ## datasets <- gsub("_slope.txt","",list.files(path=paste0("input/"),pattern=".*_slope.txt"))

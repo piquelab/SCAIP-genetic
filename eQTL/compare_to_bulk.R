@@ -47,7 +47,7 @@ pcx[pcx$qvalue>0.1,"significant_sc"] <- "no"
 pcx$pair <- paste0(gsub("[.].*","",pcx$ENSG), "_", pcx$varID)
 
 # read in the bulk ALOFT results:
-bulk <- fread("/nfs/rprdata/ALOFT/AL1-6_ln/FastQTL/permutations/results/FastQTL_results_best_18GEPCs.txt", sep="\t", header=T)
+bulk <- fread("/nfs/rprdata/ALOFT/AL1-6_ln/FastQTL_corrected/permutations/results/FastQTL_results_best_18GEPCs.txt", sep="\t", header=T)
 bulk[bulk$bqval<0.1, "significant_bulk"] <- "yes"
 bulk[bulk$bqval>0.1, "significant_bulk"] <- "no"
 bulk$pair <- paste0(bulk$pid, "_", bulk$sid)

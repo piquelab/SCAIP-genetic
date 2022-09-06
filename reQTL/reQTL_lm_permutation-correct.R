@@ -49,7 +49,7 @@ permpval = pvalues;
 mesh = data.frame(pval=c(obspval,permpval),
 cInd=c(rep(FALSE,length(obspval)),
 rep(TRUE,length(permpval)))
-                                    )
+                                   
 
 o <- order(mesh$pval)
 cInd <- mesh$cInd

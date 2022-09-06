@@ -1,5 +1,5 @@
 # this file tests for genotype by treatment interaction using a linear model
-# relies on ../eQTL_mapping
+# relies on ../eQTL_mappingx
 # based on  ../../eQTL/FastQTL/nominals/reQTL/lm_SCAIP1-6/reQTL_lm.R
 # 1/19/2021 JR
 
@@ -34,17 +34,17 @@ FDR <- 0.1
 # load the needed files:
 # 1. normalized GE files:
 # treatment:
-treat <- fread(paste0("../eQTL_mapping/normalized_GE_residuals/",cl, trt,".bed.gz"), header=T, sep="\t", stringsAsFactors=FALSE)
+treat <- fread(paste0("../eQTL/normalized_GE_residuals/",cl, trt,".bed.gz"), header=T, sep="\t", stringsAsFactors=FALSE)
 # control:
-contr <- fread(paste0("../eQTL_mapping/normalized_GE_residuals/",cl, ctrl,".bed.gz"), header=T, sep="\t", stringsAsFactors=FALSE)
+contr <- fread(paste0("../eQTL/normalized_GE_residuals/",cl, ctrl,".bed.gz"), header=T, sep="\t", stringsAsFactors=FALSE)
 # 2. txt file with dosages:
-dosages <- read.table(paste0("../eQTL_mapping//eQTL_coordinates/all_uniq_eQTL_dosages.txt"), sep="\t", header=T,stringsAsFactors=F)
+dosages <- read.table(paste0("../eQTL//eQTL_coordinates/all_uniq_eQTL_dosages.txt"), sep="\t", header=T,stringsAsFactors=F)
 colnames(dosages) <- gsub("[.]","-",colnames(dosages))
 # remove repeated dosages (where do they come from, though??):
 dosages <- dosages[!duplicated(dosages$varID),]
 rownames(dosages) <- dosages$varID
 # 3. txt file with list of testable pairs:
-pairs <- read.table(paste0("../eQTL_mapping/eQTL_coordinates/all_signif_SNP-gene_pairs.txt"),sep="\t", header=T,stringsAsFactors=F)
+pairs <- read.table(paste0("../eQTL/eQTL_coordinates/all_signif_SNP-gene_pairs.txt"),sep="\t", header=T,stringsAsFactors=F)
 # remove the genes absent from eith ctrl or trt GE files:
 test_pairs <- pairs[pairs$ENSG %in% treat$ID & pairs$ENSG %in% contr$ID,]
 # repeat the dosages as in the pairs file:

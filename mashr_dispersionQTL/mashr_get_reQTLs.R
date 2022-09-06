@@ -60,6 +60,7 @@ save(uum, file="mashr-reQTLs_union-unshared-magnitude2-mlfsr0.1.Rd")
 colSums(mlfsr<0.1)
 ## unique(rowSums(mlfsr<0.1))
 ## summary(as.factor(rowSums(mlfsr<0.1)))
+egenes <- lapply(eqtl, function(x) unique(gsub("[.].*","",x)))
 
 # summarize the data per-gene:
 

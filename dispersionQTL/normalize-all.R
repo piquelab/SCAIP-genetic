@@ -13,7 +13,7 @@ indivBatchFilter <- 3
 load("/nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/10_RNA.Variance_output/tmp9/1.2_Sel.PhxNew.RData")
 
 # load the annotation to add chromosomal coordinates:
-anno <- read.table("/wsu/home/groups/piquelab/data/gencode/Gencode_human/release_31/gencode.v31.annotation.gff3.gz",header=F,stringsAsFactors=F)
+anno <- read.table("/wsu/home/groups/piquelab/data/gencode/Gencode_human/release_31/GRCh37_mapping/gencode.v31lift37.annotation.gff3.gz",header=F,stringsAsFactors=F)
 anno$gene_id <- gsub("ID=","",anno$V9)
 anno$gene_id <- gsub(";.*","",anno$gene_id)
 # remove the _PAR_Y versions:
@@ -125,4 +125,4 @@ write.table(tcovs[1:(7+i),],paste0("covariates/",cn,t,"_covs_",i,"PCs.txt"), sep
                         }
         }
 
-### END 1/15/2021 JR
+### END 10/31/2021 JR

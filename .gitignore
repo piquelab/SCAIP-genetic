@@ -10,5 +10,7 @@ STD*
 *.[eo][0-9]
 *txt
 slurm-*
+LDA-eQTL*
+reQTL*
  # except:
 !datasets.txt

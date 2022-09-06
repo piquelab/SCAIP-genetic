@@ -11,9 +11,9 @@ if (length(args)>0){
       dataset <- args[1]
     }
 
-pcs = 3
+pcs = 4
 
-eQTL_dir <- "../eQTL_mapping/eQTL_output/"
+eQTL_dir <- "../eQTL/eQTL_output/"
 
 # read in, grab effect estimate and its standard error
 m <- fread(paste0(eQTL_dir, dataset,".GEPC",pcs,".nominals.eQTL.txt.gz"),sep=" ")
@@ -43,6 +43,6 @@ colnames(lfsr)[2] <- dataset
 write.table(lfsr, paste0("input/", dataset, "_lfsr.txt"), sep="\t", col.names=T, row.names=F, quote=F)
 
 # gzip all:
-system(paste0("for file in input/", dataset,"*txt ; do gzip -f input/$file > input/$file.gz; done"))
+system(paste0("for file in input/", dataset,"*txt ; do gzip $file; done"))
 
 ### END 1/13/2021 JR

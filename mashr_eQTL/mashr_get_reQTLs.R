@@ -8,15 +8,23 @@ thresh <- 0.1
 
 # load the mashr results:
 mlfsr <- data.frame(fread("output/lfsr/lfsr_mashr_all.txt.gz"))
+rownames(mlfsr) <- mlfsr[,1]
+mlfsr <- mlfsr[,-1]
 # add colnames:
 cols <- read.table("FastQTL_all_conditions-colnames.txt",stringsAsFactors=F)[,1]
 colnames(mlfsr) <- gsub("[.]","-",cols)
 # add rownames:
-rows <- read.table("rownames_mash_updated.txt",stringsAsFactors=F)[,1]
-rownames(mlfsr) <- rows
+## rows <- read.table("rownames_mash.txt",stringsAsFactors=F)[,1]
+## fail1 <- read.table("failed_rows_344.txt",stringsAsFactors=F)[,1]
+## fail2 <- read.table("failed_rows_353.txt",stringsAsFactors=F)[,1]
+## rows <- rows[!rows %in% c(fail1, fail2)]
+## write.table(rows, "rownames_mash_updated.txt", col.names=F, row.names=F, quote=F)
+## rows <- read.table("rownames_mash_updated.txt",stringsAsFactors=F)[,1]
+## rownames(mlfsr) <- rows
 mean <- fread("output/posterior_mean/posterior_mean_mashr_all.txt.gz",data.table=F)
+rownames(mean) <- mean[,1]
+mean <- mean[,-1]
 colnames(mean) <- gsub("[.]","-",cols)
-rownames(mean) <- rows
 
 # get pair-wise unique eQTLs:
 pairs <- read.table("contrasts.txt",sep="\n",stringsAsFactors=F)[,1]
@@ -58,8 +66,10 @@ save(uum, file="mashr-reQTLs_union-unshared-magnitude2-mlfsr0.1.Rd")
 colSums(mlfsr<0.1)
 ## unique(rowSums(mlfsr<0.1))
 ## summary(as.factor(rowSums(mlfsr<0.1)))
+egenes <- lapply(eqtl, function(x) unique(gsub("[.].*","",x)))
 
 # summarize the data per-gene:
+
 
 # get sharing and specificity:
 l5 <- character()
