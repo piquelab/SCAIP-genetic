@@ -20,11 +20,12 @@ Steps:<br/>
 3. Run eQTL mapping: ./eQTL/run.FastQTL.nominals-all-covs.sh
 4. Check removing how many GE PCs generates the most egenes: ./eQTL/process-nominals.sh
 5. Get egenes and eQTL coordinates from optimal model results: ./eQTL/get-egenes-eQTLs.sh
-### mashr_eQTL
+
+### mashr_eQTL and mashr_dispersionQTL and mashr_eQTL-on-mean
 ./mashr_eQTL - all the scripts and results of running mashr (and follow-up analyses) on SCAIP1-6; relies on output in ./eQTL <br/>
 strategy: mashr on eQTL results from all treatments and conditions at once <br/>
 INPUT: ./eQTL/eQTL_output/*.GEPC0.nominals.eQTL.txt.gz  <br/>
-OUTPUT:  <br/>
+OUTPUT: ./mashr_eQTL/output/* <br/>
 ###
 Filters:<br/>
 - gene-variant pairs with estimates across all cell types and conditions
