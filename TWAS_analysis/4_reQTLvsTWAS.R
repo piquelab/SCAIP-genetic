@@ -205,12 +205,15 @@ p2 <- ggplot(plotDF2, aes(x=zscore_DE, y=zscore_TWAS, color=factor(MCls)))+
           size=2.5, max.overlaps=10)+  
       scale_color_manual(values=c("Bcell"="#4daf4a", "Monocyte"="#984ea3",
          "NKcell"="#aa4b56", "Tcell"="#ffaa00"), guide="none")+
-      xlab("zscore of DE")+
-      ylab("zscore of asthma TWAS")+
+      xlab(bquote(~italic(Z)~"-score of DE"))+
+      ylab(bquote(~italic(Z)~"-score of asthma TWAS"))+
       xlim(-50, 20)+ylim(-8,5)+
       geom_hline(yintercept=0, linetype="dashed", color="grey30")+
       geom_vline(xintercept=0, linetype="dashed", color="grey30")+
-      facet_grid(MCls~contrast, labeller=labeller(contrast=c("LPS-DEX"="LPS+DEX", "PHA-DEX"="PHA+DEX")))+ 
+      facet_grid(MCls~contrast,
+                 labeller=labeller(MCls=c("Bcell"="B cell", "Monocyte"="Monocyte",
+                                          "NKcell"="NK cell", "Tcell"="T cell"),
+                                  contrast=c("LPS-DEX"="LPS+DEX", "PHA-DEX"="PHA+DEX")))+ 
       theme_bw()+
       theme(## legend.position=c(0.25, 0.85),
             ## legend.title=element_blank(),

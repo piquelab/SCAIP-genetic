@@ -127,7 +127,7 @@ cvt
 
 ####
 ###
-                  
+                   
 ###
 lab1 <- c("CTRL"="CTRL", 
           "LPS"="LPS", "LPS-DEX"="LPS+DEX",
@@ -135,6 +135,9 @@ lab1 <- c("CTRL"="CTRL",
 col1 <- c("CTRL"="#828282", 
            "LPS"="#fb9a99", "LPS-DEX"="#e31a1c",
            "PHA"="#a6cee3", "PHA-DEX"="#1f78b4")
+
+MCl2 <- c("Bcell"="B cell", "Monocyte"="Monocyte", "NKcell"="NK cell", "Tcell"="T cell")
+
 
 ###
 fn <- "/nfs/rprdata/julong/SCAIP/analyses/SCAIP-B1-6_2020.03.23/6_DEG.CelltypeNew_output/Filter2/2_meta.rds"
@@ -168,6 +171,7 @@ for (i in 1:length(geneList)){
    fig_ls <- lapply(1:4, function(j){
        ##
        oneMCl <- MCls[j]
+       oneMCl2 <- MCls[oneMCl]
 
    ### fig 1, gene mean
       cvt <- cvt%>%filter(MCls==oneMCl)
@@ -191,7 +195,7 @@ for (i in 1:length(geneList)){
           scale_y_continuous(expand=expansion(mult=c(0.2, 0.2)))+
           scale_fill_manual("", values=col1, labels=lab1)+
           scale_x_discrete("", labels=lab1)+
-          ggtitle(bquote(~.(oneMCl)~"("~italic(.(symbol))~")"))+
+          ggtitle(bquote(~.(oneMCl2)~"("~italic(.(symbol))~")"))+
           theme_bw()+
           theme(axis.text.x=element_text(angle=-90, hjust=0, size=10),
           ## axis.text.x=element_blank(),
@@ -221,6 +225,7 @@ symbol <- anno2[1,"SYMBOL"]
 ens <- anno2[1, "ENSEMBL"]
 
 oneMCl <- "Tcell"
+oneMCl2 <- MCl2[oneMCl]
 
 cvt <- getData(gene=ens, datatype="bulk")%>%dplyr::filter(MCls==oneMCl) 
 cvt <- adj2Gene(cvt)
@@ -253,20 +258,21 @@ p1 <- ggplot(cvt2,aes(x=factor(treats), y=yscale2, fill=treats))+
    scale_y_continuous(expand=expansion(mult=c(0.2, 0.2)))+
    scale_fill_manual("", values=col1, labels=lab1)+
    scale_x_discrete("", labels=lab1)+
-   ggtitle(bquote(~italic(.(symbol))~"("~.(oneMCl)~")"))+
+   ggtitle(bquote(~italic(.(symbol))~"("~.(oneMCl2)~")"))+
    theme_bw()+
    theme(## axis.text.x=element_text(angle=-90, hjust=0, size=10),
-         axis.text.x=element_text(size=8),
+         axis.text.x=element_text(size=10),
+         axis.text.y=element_text(size=12),
          axis.title.x=element_blank(),
          axis.ticks.x=element_blank(),
-         axis.title.y=element_text(size=10),
+         axis.title.y=element_text(size=12),
          plot.title=element_text(hjust=0.5, size=12),
          panel.border=element_rect(color=col_MCls[oneMCl], size=1.5),
          legend.position="none")
 
 ###
 figfn <- paste(outdir, "Figure2.1_IL1R2_coherent.png", sep="")
-png(figfn, width=280, height=400, res=120)
+png(figfn, width=320, height=400, res=120)
 p1
 dev.off()
 
@@ -279,6 +285,7 @@ symbol <- anno2[1,"SYMBOL"]
 ens <- anno2[1, "ENSEMBL"]
 
 oneMCl <- "Tcell"
+oneMCl2 <- MCl2[oneMCl]
 
 cvt <- getData(gene=ens, datatype="bulk")%>%dplyr::filter(MCls==oneMCl) 
 cvt <- adj2Gene(cvt)
@@ -309,19 +316,20 @@ p2 <- ggplot(cvt2,aes(x=factor(treats), y=yscale2, fill=treats))+
    scale_y_continuous(expand=expansion(mult=c(0.2, 0.2)))+
    scale_fill_manual("", values=col1, labels=lab1)+
    scale_x_discrete("", labels=lab1)+
-   ggtitle(bquote(~italic(.(symbol))~"("~.(oneMCl)~")"))+
+   ggtitle(bquote(~italic(.(symbol))~"("~.(oneMCl2)~")"))+
    theme_bw()+
    theme(## axis.text.x=element_text(angle=-90, hjust=0, size=10),
-         axis.text.x=element_text(size=8),
+         axis.text.x=element_text(size=10),
+         axis.text.y=element_text(size=12),
          axis.title.x=element_blank(),
          axis.ticks.x=element_blank(),
-         axis.title.y=element_text(size=10),
+         axis.title.y=element_text(size=12),
          plot.title=element_text(hjust=0.5, size=12),
          panel.border=element_rect(color=col_MCls[oneMCl], size=1.5),
          legend.position="none")
  
 figfn <- paste(outdir, "Figure2.2_LTB_coherent.png", sep="")
-png(figfn, width=280, height=400, res=120)
+png(figfn, width=320, height=400, res=120)
 p2
 dev.off()
 
@@ -365,13 +373,13 @@ p3 <- ggplot(plotDF, aes(x=factor(treats), y=yscale2, fill=treats))+
    scale_y_continuous(expand=expansion(mult=c(0.2, 0.2)))+
    scale_fill_manual("", values=col1, labels=lab1)+
    scale_x_discrete("", labels=lab1)+
-   ggtitle(bquote(~italic(.(symbol))~"(Bcell)"))+
+   ggtitle(bquote(~italic(.(symbol))~"(B cell)"))+
    theme_bw()+
    theme(## axis.text.x=element_text(angle=-90, hjust=0, size=10),
-         axis.text.x=element_text(size=10),
+         axis.text=element_text(size=12),
          axis.title.x=element_blank(),
          axis.ticks.x=element_blank(),
-         axis.title.y=element_text(size=10),
+         axis.title.y=element_text(size=12),
          plot.title=element_text(hjust=0.5, size=12),
          panel.border=element_rect(color=col_MCls["Bcell"], size=1.5),
          legend.position="none")
@@ -379,7 +387,7 @@ p3 <- ggplot(plotDF, aes(x=factor(treats), y=yscale2, fill=treats))+
 ###
 ###
 figfn <- paste(outdir, "Figure2.3_CD52_Bcell_inCoherent.png", sep="")
-png(figfn, width=300, height=400, res=120)
+png(figfn, width=320, height=400, res=120)
 p3
 dev.off()
 
@@ -403,13 +411,13 @@ p4 <- ggplot(plotDF, aes(x=factor(treats), y=yscale2, fill=treats))+
    scale_y_continuous(expand=expansion(mult=c(0.2, 0.2)))+
    scale_fill_manual("", values=col1, labels=lab1)+
    scale_x_discrete("", labels=lab1)+
-   ggtitle(bquote(~italic(.(symbol))~"(NKcell)"))+
+   ggtitle(bquote(~italic(.(symbol))~"(NK cell)"))+
    theme_bw()+
    theme(## axis.text.x=element_text(angle=-90, hjust=0, size=10),
-         axis.text.x=element_text(size=10),
+         axis.text=element_text(size=12),
          axis.title.x=element_blank(),
          axis.ticks.x=element_blank(),
-         axis.title.y=element_text(size=10),
+         axis.title.y=element_text(size=12),
          plot.title=element_text(hjust=0.5, size=12),
          panel.border=element_rect(color=col_MCls["NKcell"], size=1.5),
          legend.position="none")
@@ -417,7 +425,7 @@ p4 <- ggplot(plotDF, aes(x=factor(treats), y=yscale2, fill=treats))+
 ###
 ###
 figfn <- paste(outdir, "Figure2.4_CD52_NKcell_Coherent.png", sep="")
-png(figfn, width=300, height=400, res=120)
+png(figfn, width=320, height=400, res=120)
 p4
 dev.off()
 
